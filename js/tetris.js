@@ -2,7 +2,7 @@
 //El static no se asocia a un objeto si no a una clase
 class Game { 
     // Square length in pixels
-    static SQUARE_LENGTH = screen.width > 420 ? 15 : 20; //la medida del cuadrado depende del tamaño de la pantalla
+    static SQUARE_LENGTH = screen.width > 420 ? 18 : 20; //la medida del cuadrado depende del tamaño de la pantalla
     //porejemplosi la pantalla es mayor a 420px va a ser de 30px o si no de 20
     static COLUMNS = 12;
     static ROWS = 25;
@@ -46,7 +46,7 @@ class Game {
 
 
     //El método constructor es un metodo especial para crear e inicializar un objeto creado a partir de una clase.
-//min 14:46
+
     constructor(canvasId) {
         //variables
         this.canvasId = canvasId;
@@ -63,17 +63,20 @@ class Game {
         this.init();
     }
 
+
+    //En este metodo init , se inicializa los siguientes metodoso:
     init() {
-        this.showWelcome();
-        this.initDomElements();
-        this.initSounds();
-        this.resetGame();
-        this.draw();
-        this.initControls();
+        this.showWelcome();// da la bienvenidia al juego 
+        this.initDomElements();//Muestra los botones del juego
+        this.initSounds();//inicia el sonido de fondo al darle play al juego
+        this.resetGame();//muestra el boton de reinicio del juego
+        this.draw();//muestra el tablero de juego
+        this.initControls();//da la funcionalidad de los distintos botones del juego
     }
 
-    resetGame() {
 
+    // este metodo reset reinica y pausa las funcionalidad de los elementos del juego
+    resetGame() {
         this.score = 0;
         this.sounds.success.currentTime = 0;
         this.sounds.success.pause();
@@ -87,8 +90,9 @@ class Game {
         this.pauseGame();
     }
 
+    //se crea una ventana emergente para dar la bienvenida y las instruciones del juego
     showWelcome() {
-        Swal.fire({
+        Swal.fire({// swal.fire es una libreria que nos proporciona el estilo y la funcionalida de la ventana emergente
             title: 'Bienvenidos!',
             text: ' Controles: "P" Pausar o reanudar "R"  Rotar, "Flechas de dirección " Mover figura hacia esa dirección, También puedes usar los botones si estás en móvil .',
             imageUrl: '/imagen/tetris1.gif',
@@ -113,9 +117,9 @@ class Game {
 
     }
 
-
+//En este metodo se definen eventos como el keydown = presionar una tecla determinada , y establecer instrucciones en cada case para la direccion de la pieza
     initControls() {
-        document.addEventListener("keydown", (e) => {
+        document.addEventListener("keydown", (e) => {//
             const { code } = e;
             if (!this.canPlay && code !== "KeyP") {
                 return;
@@ -140,7 +144,9 @@ class Game {
             this.syncExistingPiecesWithBoard();
         });
 
-        this.$btnDown.addEventListener("click", () => {
+
+        //mediante un nodo se trae del html el id de cada boton
+        this.$btnDown.addEventListener("click", () => { 
             if (!this.canPlay) return;
             this.attemptMoveDown();
         });

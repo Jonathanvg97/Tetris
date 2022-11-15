@@ -663,28 +663,33 @@ class Game {
         this.currentFigure.incrementRotationIndex();
     }
 
-    async askUserConfirmResetGame() {
-        this.pauseGame();
-        /*const result = await Swal.fire({
-            title: 'Reiniciar',
-            text: "¿Quieres reiniciar el juego?",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#fdbf9c',
-            cancelButtonColor: '#4A42F3',
-            cancelButtonText: 'No',
-            confirmButtonText: 'Sí'
-        });*/
-        const result = "";
-        if (result.value) {
-            this.resetGame();
-        } else {
-            this.resumeGame();
+        async askUserConfirmResetGame() {
+            this.pauseGame();
+            Swal.fire({
+                title: 'Quieres reiniciar el juego?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, reiniciar'
+              }).then((result) => {
+                if (result.isConfirmed) {
+                    this.resetGame();
+                  Swal.fire(
+                    'Reiniado!',
+                    'El juego ha sido reiniciado.',
+                    'success'
+                  )
+                } else {
+                        this.resumeGame();
+                    }
+                //   location.reload();
+                
+              })
+    
+            
         }
-    }
-
 }
-
 //Encierra funciones que se van a reutilizar a lo largo del juego 
 class Utils {
     //se utiliza el metodo getnumberrange para generar un numero aleatorio en un rango 

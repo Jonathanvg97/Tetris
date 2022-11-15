@@ -14,7 +14,7 @@ class Game {
     //Color de los bordes del tablero
     static BORDER_COLOR = "green";
     //Color a aplicar cuando se elimina una fila completa del tablero
-    static DELETED_ROW_COLOR = "purple";
+    static DELETED_ROW_COLOR = "white";
     // When a piece collapses with something at its bottom, how many time wait for putting another piece? (in ms)
     static TIMEOUT_LOCK_PUT_NEXT_PIECE = 300; // tiempo en que se demora en aparecer la otra ficha
     // Speed of falling piece (in ms)
@@ -26,17 +26,17 @@ class Game {
     static COLORS = [ // colores de las fichas
         "#ffd300",
         "#de38c8",
-        "#652ec7",
-        "#33135c",
-        "#13ca91",
-        "#ff9472",
-        "#35212a",
-        "#ff8b8b",
-        "#28cf75",
+        "#8afffb",
+        "#ef98f5",
+        "#2cf5b2",
+        "#fc9777",
+        "#ebdfe5",
+        "#f50707",
+        "#11f57a",
         "#00a9fe",
-        "#04005e",
-        "#120052",
-        "#272822",
+        "#fabd39",
+        "#ae9ee8",
+        "#c3e619",
         "#f92672",
         "#66d9ef",
         "#a6e22e",
@@ -73,6 +73,7 @@ class Game {
     }
 
     resetGame() {
+
         this.score = 0;
         this.sounds.success.currentTime = 0;
         this.sounds.success.pause();
@@ -87,7 +88,14 @@ class Game {
     }
 
     showWelcome() {
-        alert('Bienvenidos')
+        Swal.fire({
+            title: 'Bienvenidos!',
+            text: ' Controles: "P" Pausar o reanudar "R"  Rotar, "Flechas de dirección " Mover figura hacia esa dirección, También puedes usar los botones si estás en móvil .',
+            imageUrl: '/imagen/tetris1.gif',
+            imageWidth: 400,
+            imageHeight: 200,
+            imageAlt: 'Custom image',
+          })
         /*Swal.fire("Bienvenido", `Port casi perfecto del juego de Tetris en JavaScript.
         <br>
         <strong>Controles:</strong>

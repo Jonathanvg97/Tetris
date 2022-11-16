@@ -239,18 +239,13 @@ class Game {
         // Comprobar si hay algo en Y 1. Tal vez no sea justo para el jugador, pero funciona
         for (const point of this.existingPieces[1]) {
             //define la posicion minima que puede alcanzar la ficha en el tablero, en este caso la posicion minima quen puede llegar a tener es 1 "segunda linea del tetris"
-            if (point.taken) { // si el jugador pierde se muestra un alerta de game over
-                Swal.fire({
-                    icon: 'error',
-                    title: 'GAME OVER',
-                    text: 'Volver a jugar',
-                  })
+            if (point.taken) { 
                 return true; 
             }
         }
         return false; // puede seguir jugando
     }
-
+    
 // metodo se utiliza para eliminar una fila cuando sea completada
     getPointsToDelete = () => {
         const points = [];// se crea un arraylist para coleccionar los puntos cuando la fila sea eliminada horizontalmente "y"
@@ -284,29 +279,30 @@ class Game {
     }
 
 // en este metodo finalmente es eliminada la fila del todo, vuelve a tomar el color determinado inicialmente del tablero
-    removeRowsFromExistingPieces(yCoordinates) {
-        for (let y of yCoordinates) {
-            for (const point of this.existingPieces[y]) {
-                point.color = Game.EMPTY_COLOR;
-                point.taken = false;// false es para que el espacio del tablero quede disponible para las siguientes fichas
-            }
+removeRowsFromExistingPieces(yCoordinates) {
+    for (let y of yCoordinates) {
+        for (const point of this.existingPieces[y]) {
+            point.color = Game.EMPTY_COLOR;
+            point.taken = false;// false es para que el espacio del tablero quede disponible para las siguientes fichas
         }
     }
+}
 
-
+// en este metodo se verifica y se elimina la fila completada 
     verifyAndDeleteFullRows() {
-        // Here be dragons
-        const yCoordinates = this.getPointsToDelete();
-        if (yCoordinates.length <= 0) return;
-        this.addScore(yCoordinates);
+        const yCoordinates = this.getPointsToDelete(); // si la fila no tiene todos los cuadros ocupados , no se elimna nada y seguira jugando normal hasta que se complete una fila
+        if (yCoordinates.length <= 0) return; 
+        this.addScore(yCoordinates);//si se completa una fila : se reinicia los sonidos de elimianr
         this.sounds.success.currentTime = 0;
-        this.sounds.success.play();
+        this.sounds.success.play(); // se activa el sonido de la eliminacion de la fila
         this.changeDeletedRowColor(yCoordinates);
-        this.canPlay = false;
+        this.canPlay = false; // se paraliza el juego hasta que la linea desaparezca
+        
+        // en el settime out se construye la animacion que va a eliminar la fila
         setTimeout(() => {
-            this.sounds.success.pause();
-            this.removeRowsFromExistingPieces(yCoordinates);
-            this.syncExistingPiecesWithBoard();
+            this.sounds.success.pause();// se pausa el sonido de elimminar la fila
+            this.removeRowsFromExistingPieces(yCoordinates);// se remueven las fichas existente en el tablero en el eje y
+            this.syncExistingPiecesWithBoard();//sincroniza el espacio del tablero para que las fichas que quedan en el board ocupen este espacio 
             const invertedCoordinates = Array.from(yCoordinates);
             // Now the coordinates are in descending order
             invertedCoordinates.reverse();
@@ -323,7 +319,7 @@ class Game {
                                     color: Game.EMPTY_COLOR,
                                     taken: false,
                                 }
-
+                                
                                 this.syncExistingPiecesWithBoard();
                                 counter++;
                                 auxiliarY++;
@@ -337,49 +333,64 @@ class Game {
             this.canPlay = true;
         }, Game.DELETE_ROW_ANIMATION);
     }
-
+    
     mainLoop() {
         if (!this.canPlay) {
             return;
         }
         // If figure can move down, move down
-        if (this.figureCanMoveDown()) {
+        // si la ficha se puede mover hacia bajo , es porque aun no ha hecho contacto con otra pieza o suelo del tablero
+        if (this.figureCanMoveDown()) {//se le suma 1 a la ficha por cada iteracion para que vaya desplazandose hacia abajo por el tablero
             this.globalY++;
         } else {
             // If figure cannot, then we start a timeout because
             // player can move figure to keep it going down
             // for example when the figure collapses with another points but there's remaining
             // space at the left or right and the player moves there so the figure can keep going down
+
+            // Si la figura no puede bajar , entonces comenzamos un tiempo de espera para que se salga la siguiente ficha
             if (this.timeoutFlag) return;
             this.timeoutFlag = true;
             setTimeout(() => {
                 this.timeoutFlag = false;
                 // If the time expires, we re-check if figure cannot keep going down. If it can
                 // (because player moved it) then we return and keep the loop
+                // Si el tiempo expira, volvemos a verificar si la cifra no puede seguir bajando. si puede
+                 // (porque el jugador lo movió) luego volvemos y mantenemos el ciclo
                 if (this.figureCanMoveDown()) {
                     return;
                 }
                 // At this point, we know that the figure collapsed either with the floor
                 // or with another point. So we move all the figure to the existing pieces array
+                // En este punto, sabemos que la figura hizo contacto ya sea con el piso u otra figura
+                 // Entonces movemos toda la figura al tablero de piezas existente
                 this.sounds.tap.currentTime = 0;
                 this.sounds.tap.play();
-                this.moveFigurePointsToExistingPieces();
-                if (this.playerLoses()) {
-                    //Swal.fire("Juego terminado", "Inténtalo de nuevo");
+                this.moveFigurePointsToExistingPieces();//se activa la siguiente ficha para salir
+                if (this.playerLoses()) { // se verifica constantemente el estado del jugador
+                    //
+
+                    Swal.fire({// si el jugador pierde se muestra un alerta de game over y da opcion de volbver a jugar
+                        icon: 'error',
+                        title: 'GAME OVER',
+                        text: 'Volver a jugar',
+                      })
                     this.sounds.background.pause();
                     this.canPlay = false;
                     this.resetGame();
                     return;
                 }
+                //en caso de que no pierda vuelve a ejecutar los siguientes metodos
                 this.verifyAndDeleteFullRows();
                 this.chooseRandomFigure();
                 this.syncExistingPiecesWithBoard();
-            }, Game.TIMEOUT_LOCK_PUT_NEXT_PIECE);
+            }, Game.TIMEOUT_LOCK_PUT_NEXT_PIECE);// tiempo en que se demora en aparecer la otra ficha
         }
-        this.syncExistingPiecesWithBoard();
+        this.syncExistingPiecesWithBoard();//monta las fichas sobre el tablero
     }
 
 
+//en este metodo se limpia el tablero , si hay piezas existentes las mantiene con el color original antes de ser eliminadas
     cleanGameBoardAndOverlapExistingPieces() {
         for (let y = 0; y < Game.ROWS; y++) {
             for (let x = 0; x < Game.COLUMNS; x++) {
@@ -388,6 +399,7 @@ class Game {
                     taken: false,
                 };
                 // Overlap existing piece if any
+                // Superponer pieza existente si hay alguna
                 if (this.existingPieces[y][x].taken) {
                     this.board[y][x].color = this.existingPieces[y][x].color;
                 }
@@ -395,6 +407,7 @@ class Game {
         }
     }
 
+    //mantener actualizada la posicion en el plano global y fijo del tablero
     overlapCurrentFigureOnGameBoard() {
         if (!this.currentFigure) return;
         for (const point of this.currentFigure.getPoints()) {
@@ -402,12 +415,14 @@ class Game {
         }
     }
 
-
+//sincroniza las fichas en el tablero mediante los dos metodos anteriores
     syncExistingPiecesWithBoard() {
         this.cleanGameBoardAndOverlapExistingPieces();
         this.overlapCurrentFigureOnGameBoard();
     }
 
+
+    // este metodo draw se utilza para dibujar la figura del tablero en este caso , repitiendolo en pantalla en constantemente , en este caso cada 17 milisegundos
     draw() {
         let x = 0, y = 0;
         for (const row of this.board) {
@@ -423,21 +438,26 @@ class Game {
             y += Game.SQUARE_LENGTH;
         }
         setTimeout(() => {
-            requestAnimationFrame(this.draw.bind(this));
+            requestAnimationFrame(this.draw.bind(this));//el request animation frame informa al navegador que quieres realizar una animación y solicita que el navegador programe el repintado de la ventana para el próximo ciclo de animación. El método acepta como argumento una función a la que llamar antes de efectuar el repintado.
         }, 17);
     }
 
+
+    //En este metodo se utiliza un nodo paraa traerlo del html y actualiza el puntaje a medidad que el juego corre
     refreshScore() {
         this.$score.textContent = `Score: ${this.score}`;
     }
 
+
+    //en este metodo se inicializa todos los sonidos del juego
     initSounds() {
-        this.sounds.background = Utils.loadSound("assets/coldpla.mp3", true);
+        this.sounds.background = Utils.loadSound("assets/coldplay.mp3", true);
         this.sounds.success = Utils.loadSound("assets/success.wav");
         this.sounds.denied = Utils.loadSound("assets/denied.wav");
         this.sounds.tap = Utils.loadSound("assets/tap.wav");
     }
 
+    //inicializa todos los botones definidos en el html
     initDomElements() {
         this.$canvas = document.querySelector("#" + this.canvasId);
         this.$score = document.querySelector("#puntaje");
@@ -452,10 +472,14 @@ class Game {
         this.canvasContext = this.$canvas.getContext("2d");
     }
 
+    //en este metodo se utiliza el random para que aleatoriamente salga una figura al azar
     chooseRandomFigure() {
         this.currentFigure = this.getRandomFigure();
     }
 
+    //se establece las posiciones para el inicio de cada figura tanto y como en x
+    //siendo para Y posicion 0
+    //para X posicion 5
     restartGlobalXAndY() {
         this.globalX = Math.floor(Game.COLUMNS / 2) - 1;
         this.globalY = 0;

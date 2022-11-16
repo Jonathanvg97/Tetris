@@ -78,14 +78,14 @@ class Game {
     // este metodo reset reinica y pausa las funcionalidad de los elementos del juego
     resetGame() {
         this.score = 0;
-        this.sounds.success.currentTime = 0;
+        this.sounds.success.currentTime = 0;  //reinicia los sonidos
         this.sounds.success.pause();
         this.sounds.background.currentTime = 0;
         this.sounds.background.pause();
-        this.initBoardAndExistingPieces();
-        this.chooseRandomFigure();
-        this.restartGlobalXAndY();
-        this.syncExistingPiecesWithBoard();
+        this.initBoardAndExistingPieces(); 
+        this.chooseRandomFigure(); //escoge una nueva ficha aleatoria
+        this.restartGlobalXAndY(); //reinicia la posicion de la ficha
+        this.syncExistingPiecesWithBoard(); //borra las fichas anteriores del tablero
         this.refreshScore();
         this.pauseGame();
     }
@@ -120,33 +120,33 @@ class Game {
 //En este metodo se definen eventos como el keydown = presionar una tecla determinada , y establecer instrucciones en cada case para la direccion de la pieza
     initControls() {
         document.addEventListener("keydown", (e) => {//
-            const { code } = e;
-            if (!this.canPlay && code !== "KeyP") {
+            const { code } = e;  //se crea una constante "code" para que contenga la lista de moviminetos y opciones que tiene el juego
+            if (!this.canPlay && code !== "KeyP") { // se tiene encuenta que canplay esta asignada inicialmente en el constructor y esta asignadada ccomo false
                 return;
             }
             switch (code) {
-                case "ArrowRight":
+                case "ArrowRight": //mover a la derecha despues de cada presion
                     this.attemptMoveRight();
                     break;
                 case "ArrowLeft":
-                    this.attemptMoveLeft();
+                    this.attemptMoveLeft(); //mover a a izquierda despues de cada presion
                     break;
                 case "ArrowDown":
-                    this.attemptMoveDown();
+                    this.attemptMoveDown(); //mover para abajo despues de cada presion
                     break;
                 case "KeyR":
-                    this.attemptRotate();
+                    this.attemptRotate(); //Rotar la ficha despues de cada presion
                     break;
-                case "KeyP":
-                    this.pauseOrResumeGame();
+                case "KeyP": 
+                    this.pauseOrResumeGame(); //pausar el juego despues de cada presion
                     break;
             }
-            this.syncExistingPiecesWithBoard();
+            this.syncExistingPiecesWithBoard(); //sincroniza las fichas en el tablero segun los movimientos que se le dieron
         });
 
 
         //mediante un nodo se trae del html el id de cada boton
-        this.$btnDown.addEventListener("click", () => { 
+        this.$btnDown.addEventListener("click", () => { //se utiliza un nodo para lllamar al id del boton que esta en el  html 
             if (!this.canPlay) return;
             this.attemptMoveDown();
         });
@@ -167,7 +167,7 @@ class Game {
         }));
     }
 
-    attemptMoveRight() {
+    attemptMoveRight() {  //luego de darle un evento a cada tecla se le agrega un contador para que con cada presion en la tecla se le vaya sumando y asi se pueda ir moviendo la ficha en el tablero teniendo en cuenta la posicion ya sea x o y
         if (this.figureCanMoveRight()) {
             this.globalX++;
         }
@@ -175,7 +175,7 @@ class Game {
 
     attemptMoveLeft() {
         if (this.figureCanMoveLeft()) {
-            this.globalX--;
+            this.globalX--; 
         }
     }
 
@@ -185,35 +185,35 @@ class Game {
         }
     }
 
-    attemptRotate() {
+    attemptRotate() { 
         this.rotateFigure();
     }
 
-    pauseOrResumeGame() {
+    pauseOrResumeGame() {  // en este metodo se utiliza los nodos  y tambien se utiliza el atributo hidden para que el boton de pausar o play se muestre dependiendo si esta en juego o si esta en pausa 
         if (this.paused) {
             this.resumeGame();
-            this.$btnResume.hidden = true;
-            this.$btnPause.hidden = false;
+            this.$btnResume.hidden = true; //no se muestra el boton de play
+            this.$btnPause.hidden = false; //se muestra el boton de stop
         } else {
             this.pauseGame();
-            this.$btnResume.hidden = false;
-            this.$btnPause.hidden = true;
+            this.$btnResume.hidden = false; //se muestra el boton de play
+            this.$btnPause.hidden = true; // no se muestra el boton de stop
         }
     }
 
     pauseGame() {
-        this.sounds.background.pause();
-        this.paused = true;
+        this.sounds.background.pause(); // se pausa la cancion de fondo
+        this.paused = true; 
         this.canPlay = false;
-        clearInterval(this.intervalId);
+        clearInterval(this.intervalId); // el interval permite que la pieza baje,pero en este caso como el juego se pausa se agrega el clear para que limpie ese intervalo
     }
 
     resumeGame() {
-        this.sounds.background.play();
-        this.refreshScore();
+        this.sounds.background.play(); // se reanude la cancion
+        this.refreshScore(); // se muestra y actualiza el puntaje actual que lleva el jugador
         this.paused = false;
         this.canPlay = true;
-        this.intervalId = setInterval(this.mainLoop.bind(this), Game.PIECE_SPEED);
+        this.intervalId = setInterval(this.mainLoop.bind(this), Game.PIECE_SPEED); // cuando se vuelva a reanudar el juego, las piezas bajen de acuerdo a la velocidad que se establecio inicalmente, y el main loop es para que vya iteranndo varias veces 
     }
 
 
@@ -223,39 +223,52 @@ class Game {
             point.x += this.globalX;
             point.y += this.globalY;
             this.existingPieces[point.y][point.x] = {
-                taken: true,
-                color: point.color,
+                //existing lo que hace es mediante el punto x y y ,mantener una posicion fija de la ficha en el tablero, teniendo en cuenta  la posicion global x  y y 
+                taken: true,//cuando la ficha ya haaya tocado el fondo del tablero de paso a la siguiente ficha
+                color: point.color, //mantiene el color de la ficha cuando ya esta en una posicion fija del tablero
             }
         }
-        this.restartGlobalXAndY();
-        this.canPlay = true;
+        this.restartGlobalXAndY();// este metodo permite detectar cuando la ficha toque su punto final en el tablero para despues generar una nueva ficha desde el punto cero "arriba del tablero"
+        this.canPlay = true; // despues de que cada ficha toque su punto final siga dejando jugar
     }
 
+
+    //funcion cuando pierde el jugador
     playerLoses() {
         // Check if there's something at Y 1. Maybe it is not fair for the player, but it works
+        // Comprobar si hay algo en Y 1. Tal vez no sea justo para el jugador, pero funciona
         for (const point of this.existingPieces[1]) {
-            if (point.taken) {
-                return true;
+            //define la posicion minima que puede alcanzar la ficha en el tablero, en este caso la posicion minima quen puede llegar a tener es 1 "segunda linea del tetris"
+            if (point.taken) { // si el jugador pierde se muestra un alerta de game over
+                Swal.fire({
+                    icon: 'error',
+                    title: 'GAME OVER',
+                    text: 'Volver a jugar',
+                  })
+                return true; 
             }
         }
-        return false;
+        return false; // puede seguir jugando
     }
 
-
+// metodo se utiliza para eliminar una fila cuando sea completada
     getPointsToDelete = () => {
-        const points = [];
-        let y = 0;
-        for (const row of this.existingPieces) {
-            const isRowFull = row.every(point => point.taken);
+        const points = [];// se crea un arraylist para coleccionar los puntos cuando la fila sea eliminada horizontalmente "y"
+        let y = 0;//crea una variable contadora para iniciar los puntos en 0
+        for (const row of this.existingPieces) { //con este for se recorren todas las filas de las piezas existentes
+            const isRowFull = row.every(point => point.taken); //el metodo Every Determina si todos los elementos en el array satisfacen una condición, en este caso verifica cada punto del tablero "cuadro" que contenga un elemento que ocupe ese espacio
             if (isRowFull) {
                 // We only need the Y coordinate
-                points.push(y);
+                // Solo necesitamos la coordenada Y
+                points.push(y); //El método push() añade uno o más elementos al final de un array , en este caso a la lista "points" y devuelve la nueva longitud del array.
+                //si se cumple la condicion elimina la fila y suma 1 por cada cuadro eliminado de dicha fila
             }
             y++;
         }
-        return points;
+        return points; //retorna los puntos a la constante points
     }
 
+    // en este metodo se toman las coordenadas de los elementos que se encuentren en Y (filas) y se cambia el color de la fila cuando se completa y luego es elimminada
     changeDeletedRowColor(yCoordinates) {
         for (let y of yCoordinates) {
             for (const point of this.existingPieces[y]) {
@@ -264,18 +277,18 @@ class Game {
         }
     };
 
-
+// en este metodo se declara una operacion matematica donde se multiplica las columnas y las filas que son eliminadas y por ultimo se actucliza el puntaje
     addScore(rows) {
         this.score += Game.PER_SQUARE_SCORE * Game.COLUMNS * rows.length;
         this.refreshScore();
     }
 
-
+// en este metodo finalmente es eliminada la fila del todo, vuelve a tomar el color determinado inicialmente del tablero
     removeRowsFromExistingPieces(yCoordinates) {
         for (let y of yCoordinates) {
             for (const point of this.existingPieces[y]) {
                 point.color = Game.EMPTY_COLOR;
-                point.taken = false;
+                point.taken = false;// false es para que el espacio del tablero quede disponible para las siguientes fichas
             }
         }
     }
@@ -419,7 +432,7 @@ class Game {
     }
 
     initSounds() {
-        this.sounds.background = Utils.loadSound("assets/coldplay.mp3", true);
+        this.sounds.background = Utils.loadSound("assets/coldpla.mp3", true);
         this.sounds.success = Utils.loadSound("assets/success.wav");
         this.sounds.denied = Utils.loadSound("assets/denied.wav");
         this.sounds.tap = Utils.loadSound("assets/tap.wav");

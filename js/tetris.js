@@ -4,8 +4,8 @@ class Game {
     // Square length in pixels
     static SQUARE_LENGTH = screen.width > 420 ? 18 : 20; //la medida del cuadrado depende del tamaño de la pantalla
     //porejemplosi la pantalla es mayor a 420px va a ser de 30px o si no de 20
-    static COLUMNS = 14;
-    static ROWS = 26;
+    static COLUMNS = 12;
+    static ROWS = 25;
 // por medio de este codigo se detemina el ancho y alto del tablero de tetris , teniendo en cuenta el ancho de la pantalla y el numero de filas y columnas
     static CANVAS_WIDTH = this.SQUARE_LENGTH * this.COLUMNS;
     static CANVAS_HEIGHT = this.SQUARE_LENGTH * this.ROWS;
@@ -14,7 +14,7 @@ class Game {
     //Color de los bordes del tablero
     static BORDER_COLOR = "green";
     //Color a aplicar cuando se elimina una fila completa del tablero
-    static DELETED_ROW_COLOR = "red";
+    static DELETED_ROW_COLOR = "white";
     // When a piece collapses with something at its bottom, how many time wait for putting another piece? (in ms)
     static TIMEOUT_LOCK_PUT_NEXT_PIECE = 300; // tiempo en que se demora en aparecer la otra ficha
     // Speed of falling piece (in ms)
@@ -99,12 +99,7 @@ class Game {
             imageWidth: 400,
             imageHeight: 200,
             imageAlt: 'Custom image',
-            confirmButtonText: "OK",
-            background: "#000000",
-            color: "#fff",
-            })
-    }
-
+          })
         /*Swal.fire("Bienvenido", `Port casi perfecto del juego de Tetris en JavaScript.
         <br>
         <strong>Controles:</strong>
@@ -379,7 +374,7 @@ removeRowsFromExistingPieces(yCoordinates) {
                         icon: 'error',
                         title: 'GAME OVER',
                         text: 'Volver a jugar',
-                    })
+                      })
                     this.sounds.background.pause();
                     this.canPlay = false;
                     this.resetGame();

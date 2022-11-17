@@ -2,10 +2,10 @@
 //El static no se asocia a un objeto si no a una clase
 class Game { 
     // Square length in pixels
-    static SQUARE_LENGTH = screen.width > 420 ? 18 : 20; //la medida del cuadrado depende del tamaño de la pantalla
+    static SQUARE_LENGTH = screen.width > 420 ? 15 : 20; //la medida del cuadrado depende del tamaño de la pantalla
     //porejemplosi la pantalla es mayor a 420px va a ser de 30px o si no de 20
-    static COLUMNS = 12;
-    static ROWS = 25;
+    static COLUMNS = 14;
+    static ROWS = 26;
 // por medio de este codigo se detemina el ancho y alto del tablero de tetris , teniendo en cuenta el ancho de la pantalla y el numero de filas y columnas
     static CANVAS_WIDTH = this.SQUARE_LENGTH * this.COLUMNS;
     static CANVAS_HEIGHT = this.SQUARE_LENGTH * this.ROWS;
@@ -92,29 +92,18 @@ class Game {
 
     //se crea una ventana emergente para dar la bienvenida y las instruciones del juego
     showWelcome() {
-        Swal.fire({// swal.fire es una libreria que nos proporciona el estilo y la funcionalida de la ventana emergente
+        Swal.fire({
             title: 'Bienvenidos!',
             text: ' Controles: "P" Pausar o reanudar "R"  Rotar, "Flechas de dirección " Mover figura hacia esa dirección, También puedes usar los botones si estás en móvil .',
             imageUrl: '/imagen/tetris1.gif',
             imageWidth: 400,
             imageHeight: 200,
             imageAlt: 'Custom image',
-          })
-        /*Swal.fire("Bienvenido", `Port casi perfecto del juego de Tetris en JavaScript.
-        <br>
-        <strong>Controles:</strong>
-        <ul class="list-group">
-        <li class="list-group-item"> <kbd>P</kbd><br>Pausar o reanudar </li>
-        <li class="list-group-item"> <kbd>R</kbd><br>Rotar</li>
-        <li class="list-group-item"> <kbd>Flechas de dirección</kbd><br>Mover figura hacia esa dirección</li>
-        <li class="list-group-item"><strong>También puedes usar los botones si estás en móvil</strong></li>
-        </ul>
-        <strong>Creado por <a href="https://parzibyte.me/blog">Parzibyte</a></strong>
-        <br>
-        Gracias a <a target="_blank" href="https://www.youtube.com/channel/UCz6zvgkf6eKpgqlUZQstOtQ">Bulby</a> por la música de fondo
-        y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a> por el sonido al completar una línea
-        `);*/
-
+            confirmButtonText: "OK",
+            confirmButtonColor:"black",
+            background: "yellow",
+            color: "#000000",
+            })
     }
 
 //En este metodo se definen eventos como el keydown = presionar una tecla determinada , y establecer instrucciones en cada case para la direccion de la pieza
@@ -374,6 +363,9 @@ removeRowsFromExistingPieces(yCoordinates) {
                         icon: 'error',
                         title: 'GAME OVER',
                         text: 'Volver a jugar',
+                        confirmButtonColor:"black",
+                        background: "yellow",
+                        color: "#000000",
                       })
                     this.sounds.background.pause();
                     this.canPlay = false;
@@ -731,12 +723,15 @@ removeRowsFromExistingPieces(yCoordinates) {
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Si, reiniciar'
+                confirmButtonText: 'Si, reiniciar',
+                confirmButtonColor:"black",
+                background: "yellow",
+                color: "#000000",
               }).then((result) => {
                 if (result.isConfirmed) {
                     this.resetGame();
                   Swal.fire(
-                    'Reiniado!',
+                    'Reiniciado!',
                     'El juego ha sido reiniciado.',
                     'success'
                   )

@@ -13,10 +13,6 @@ body {
     background-image:url(/Imagen/Tetris-removebg-preview.png);
     background-size: 50%;
     background-repeat:repeat-x;
-    background: #000000;
-    background-image:url(/Imagen/Tetris-removebg-preview.png);
-    background-size: 50%;
-    background-repeat:repeat-x;
     color: white;
     margin-top: 1%;
 }
@@ -29,7 +25,6 @@ body {
     border-radius: 50% ;
     color: #000000;
     margin-top: 15px;
-
 }
 
 .btn i {
@@ -41,6 +36,7 @@ h1{
     font-size: 30px;
     font-weight:800px;
     color: rgb(9, 156, 242);
+    margin-top: 35px;
 }
 
 h2 {
@@ -48,6 +44,21 @@ h2 {
 }
 
 .text-white {
+    color: rgb(251, 164, 4);
+    font-size: 10px;
+}
+
+.text-white {
     font-size: 15px;
+    color: #fff;
+}
+
+.swal2-popup {
+    background: yellow;
+    color: black;
+}
+
+.swal2-styled.swal2-confirm {
+    background-color: #000000;
     color: #fff;
 }

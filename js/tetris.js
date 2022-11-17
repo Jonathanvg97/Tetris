@@ -224,7 +224,7 @@ class Game {
             point.y += this.globalY;
             this.existingPieces[point.y][point.x] = {
                 //existing lo que hace es mediante el punto x y y ,mantener una posicion fija de la ficha en el tablero, teniendo en cuenta  la posicion global x  y y 
-                taken: true,//cuando la ficha ya haaya tocado el fondo del tablero de paso a la siguiente ficha
+                taken: true,//cuando la ficha ya haya tocado el fondo del tablero de paso a la siguiente ficha
                 color: point.color, //mantiene el color de la ficha cuando ya esta en una posicion fija del tablero
             }
         }
@@ -583,6 +583,9 @@ removeRowsFromExistingPieces(yCoordinates) {
                 ]);
         }
     }
+ 
+    //en este metodo se limpia el tablero y las piezas existentes en el , para que estas puedan desplazarse en todo el tetris
+    //verifica constantemente los espacios en x y y para confirmar que estos esten vacios y las piezas puedan desplazarse libremente
 
     initBoardAndExistingPieces() {
         this.board = [];
@@ -608,6 +611,10 @@ removeRowsFromExistingPieces(yCoordinates) {
      * @param point An object that has x and y properties; the coordinates shouldn't be global, but relative to the point
      * @returns {boolean}
      */
+    //punto Un objeto que tiene propiedades x e y; las coordenadas no deben ser globales, sino relativas al punto
+    
+
+    //En este metodo se establece una posicion relativa para las piezas y una absoluta para el tablero
     relativePointOutOfLimits(point) {
         const absoluteX = point.x + this.globalX;
         const absoluteY = point.y + this.globalY;
@@ -619,26 +626,32 @@ removeRowsFromExistingPieces(yCoordinates) {
      * @param absoluteY
      * @returns {boolean}
      */
+
+    //delimita los puntos de colision que tiene la ficha , en el tablero
     absolutePointOutOfLimits(absoluteX, absoluteY) {
-        return absoluteX < 0 || absoluteX > Game.COLUMNS - 1 || absoluteY < 0 || absoluteY > Game.ROWS - 1;
+        return absoluteX < 0 || absoluteX > Game.COLUMNS - 1 || absoluteY < 0 || absoluteY > Game.ROWS - 1; //cuando x sea menor a 0 la ficha no se muestra
     }
 
     // It returns true even if the point is not valid (for example if it is out of limit, because it is not the function's responsibility)
+    //  aunque el punto no sea válido Devuelve verdadero (por ejemplo si está fuera de límite, no es responsabilidad de la función)
+
+
+    //este metodo verifica si hay espacios vacios en el tablero tanto en el eje x como en el y, de lo contrario se superpone una pieza sobre otra
     isEmptyPoint(x, y) {
         if (!this.existingPieces[y]) return true;
         if (!this.existingPieces[y][x]) return true;
-        if (this.existingPieces[y][x].taken) {
+        if (this.existingPieces[y][x].taken) {//taken se refiere a cuando la ficha esta puesta en una posicion fija del tablero
             return false;
         } else {
             return true;
         }
     }
 
-    /**
-     * Check if a point (in the game board) is valid to put another point there.
-     * @param point the point to check, with relative coordinates
-     * @param points an array of points that conforms a figure
-     */
+     /**
+      * Comprobar si un punto (en el tablero de juego) es válido para poner otro punto allí.
+      * apuntar el punto a comprobar, con coordenadas relativas
+      * apunta en el tablero los puntos que conforman una figura
+      */
     isValidPoint(point, points) {
         const emptyPoint = this.isEmptyPoint(this.globalX + point.x, this.globalY + point.y);
         const hasSameCoordinateOfFigurePoint = points.findIndex(p => {
@@ -651,18 +664,20 @@ removeRowsFromExistingPieces(yCoordinates) {
             return false;
         }
     }
-
+//delimitar los movimientos del boton de derecha, para mantenerlo dentro del marco del canva
     figureCanMoveRight() {
         if (!this.currentFigure) return false;
         for (const point of this.currentFigure.getPoints()) {
-            const newPoint = new Point(point.x + 1, point.y);
+            const newPoint = new Point(point.x + 1, point.y);//mientras que la ficha cuente con el espacio en cada uso de la tecla aumente de a uno 
             if (!this.isValidPoint(newPoint, this.currentFigure.getPoints())) {
-                return false;
+                return false;//en caso de que no cuente con el espacio no lo mueva
             }
         }
         return true;
     }
 
+
+    //delimitar los movimientos del boton de izquierda, para mantenerlo dentro del marco del canva
     figureCanMoveLeft() {
         if (!this.currentFigure) return false;
         for (const point of this.currentFigure.getPoints()) {
@@ -674,6 +689,7 @@ removeRowsFromExistingPieces(yCoordinates) {
         return true;
     }
 
+    //delimitar los movimientos del boton de bajar, para mantenerlo dentro del marco del canva
     figureCanMoveDown() {
         if (!this.currentFigure) return false;
         for (const point of this.currentFigure.getPoints()) {
@@ -685,6 +701,7 @@ removeRowsFromExistingPieces(yCoordinates) {
         return true;
     }
 
+    //delimitar los movimientos si la figura puede rotar, de lo contrario retorne falso
     figureCanRotate() {
         const newPointsAfterRotate = this.currentFigure.getNextRotation();
         for (const rotatedPoint of newPointsAfterRotate) {
@@ -695,7 +712,7 @@ removeRowsFromExistingPieces(yCoordinates) {
         return true;
     }
 
-
+//en este metodo se activan los sonidos en el caso en que la figura no se puede rotar 
     rotateFigure() {
         if (!this.figureCanRotate()) {
             this.sounds.denied.currentTime = 0;
@@ -705,7 +722,7 @@ removeRowsFromExistingPieces(yCoordinates) {
         this.currentFigure.points = this.currentFigure.getNextRotation();
         this.currentFigure.incrementRotationIndex();
     }
-
+//se crea el alert para confirmas si el jugador quiere reinicarl el juego
         async askUserConfirmResetGame() {
             this.pauseGame();
             Swal.fire({
@@ -726,7 +743,7 @@ removeRowsFromExistingPieces(yCoordinates) {
                 } else {
                         this.resumeGame();
                     }
-                //   location.reload();
+                //location.reload();
                 
               })
     
@@ -758,7 +775,7 @@ class Utils {
 }
 
 
-// esta clase se la plican dos coordenadas , x o y
+// esta clase se la aplican dos coordenadas  x o y de las fichas del tetris 
 class Point {
     constructor(x, y) {
         this.x = x;

@@ -10,7 +10,7 @@
 
 body {
     background: #000000;
-    background-image:url("/Imagen/Tetris-removebg-preview.png");
+    background-image:url("../Imagen/Tetris-removebg-preview.png");
     background-size: 50%;
     background-repeat:repeat-x;
     color: white;

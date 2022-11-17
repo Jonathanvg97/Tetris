@@ -95,7 +95,7 @@ class Game {
         Swal.fire({
             title: 'Bienvenidos!',
             text: ' Controles: "P" Pausar o reanudar "R"  Rotar, "Flechas de dirección " Mover figura hacia esa dirección, También puedes usar los botones si estás en móvil .',
-            imageUrl: '/Imagen/tetris1.gif',
+            imageUrl: '../Imagen/tetris1.gif',
             imageWidth: 400,
             imageHeight: 200,
             imageAlt: 'Custom image',

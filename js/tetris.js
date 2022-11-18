@@ -5,7 +5,7 @@ class Game {
     static SQUARE_LENGTH = screen.width > 420 ? 15 : 20; //la medida del cuadrado depende del tamaño de la pantalla
     //porejemplosi la pantalla es mayor a 420px va a ser de 30px o si no de 20
     static COLUMNS = 14;
-    static ROWS = 26;
+    static ROWS = 25;
 // por medio de este codigo se detemina el ancho y alto del tablero de tetris , teniendo en cuenta el ancho de la pantalla y el numero de filas y columnas
     static CANVAS_WIDTH = this.SQUARE_LENGTH * this.COLUMNS;
     static CANVAS_HEIGHT = this.SQUARE_LENGTH * this.ROWS;

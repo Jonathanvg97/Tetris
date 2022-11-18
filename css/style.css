@@ -14,7 +14,7 @@ body {
     background-size: 50%;
     background-repeat:repeat-x;
     color: white;
-    margin-top: 1%;
+    margin-top: 80px;
 }
 
 .btn {
@@ -90,10 +90,13 @@ h2 {
     body {
         background-repeat:repeat;
         background-size: 50%;
+        margin-top: 1%;
     }
 
     .text-white {
-        font-size: 8px;
+        font-size: 5px;
+    
     }
+
 }
 

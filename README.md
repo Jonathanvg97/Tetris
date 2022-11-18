@@ -19,6 +19,7 @@ centrado entre ambas imagenes.
 <img width="367" alt="image" src="https://user-images.githubusercontent.com/114879421/202713853-80b03956-05d4-4f83-8f41-3969479bdbaa.png">
 
 para los botones utilizamos las siguientes propiedades para darle la forma redonda de los mismos y el color para resaltarlo del fondo anterior 
+
 <img width="268" alt="image" src="https://user-images.githubusercontent.com/114879421/202714056-d41ae490-f9ef-4928-82ef-0ef51aec4a28.png">
 
 por ultimo se aplico el tamaño de la letra y el estilo con los colores necesarios para que todo este espacio tuviera la armonia necesaria.
@@ -64,35 +65,36 @@ COLORS = Éste array contiene la lista de los colores que dibujaran las piezas e
 Para el contructor lleva como parametro CanvasId, estos 11 objetos cuentan con un dato,cuyo valor se ve reflejado en booleanos, arrays, números, null o métodos.
 
 En la clase Game se utilizaron los siguientes metodos:
-init(){};
-resetGame(){};
-showWelcome(){};
-initControls(){};
-attemptMoveRight(){};
-attemptMoveLeft(){};
-attemptMoveDown(){};
-attemptRotate(){};
-pauseOrResumeGame(){};
+
+init(){}
+resetGame(){}
+showWelcome(){}
+initControls(){}
+attemptMoveRight(){}
+attemptMoveLeft(){}
+attemptMoveDown(){}
+attemptRotate(){}
+pauseOrResumeGame(){}
 hidden = false indica que no se esconda el elemento y el hidden = true indica que si se esconda el elemento.
-pauseGame(){};
-resumeGame(){};
-moveFigureToExistingPieces(){};
-playerLoses(){};
-getPointsToDelete(){};
-changeDeletedRowColor(){};
-addScore(){};
-removeRowsFromExistingPieces(){};
-verifyAndDeleteFullRows(){};
+pauseGame(){}
+resumeGame(){}
+moveFigureToExistingPieces(){}
+playerLoses(){}
+getPointsToDelete(){}
+changeDeletedRowColor(){}
+addScore(){}
+removeRowsFromExistingPieces(){}
+verifyAndDeleteFullRows(){}
 mainLoop(){}
-cleanGameBoardAndOverlapExistingPieces(){};
-overlapCurrentFigureOnGameBoard(){};
-syncExistingPiecesWithBoard(){};
+cleanGameBoardAndOverlapExistingPieces(){}
+overlapCurrentFigureOnGameBoard(){}
+syncExistingPiecesWithBoard(){}
 draw(){}
 refreshScore(){}
 initSounds(){}
-initDomElements(){};
-chooseRandomFigure(){};
-restartGlobalXAndY(){};
+initDomElements(){}
+chooseRandomFigure(){}
+restartGlobalXAndY(){}
 getRandomFigure(){};
 initBoardAndExistingPieces(){}
 relativePointOutOfLimits(){}

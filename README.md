@@ -120,6 +120,8 @@ La Clase  Point, contiene un constructor que tiene como parametro los ejes del t
 La clase Tetromino, posee la cantidad de movimientos o rotaciones que pueda tener la ficha 
 
 
+Tambien se le implementaron unas alertas  traidas de una libreria JS, para La Bienvenida al juego, reset y para el game-over del juego.
+
 
 
 
